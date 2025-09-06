@@ -8,9 +8,14 @@ app = FastAPI(title="Nano Banana Hackathon API", version="1.0.0")
 # Add CORS middleware to allow frontend to communicate with backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],  # Next.js default port
+    allow_origins=[
+        "http://localhost:3000",  # Next.js default port
+        "http://127.0.0.1:3000",  # Alternative localhost
+        "http://localhost:3001",  # Alternative port
+        "http://127.0.0.1:3001",  # Alternative port with 127.0.0.1
+    ],
     allow_credentials=True,
-    allow_methods=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
     allow_headers=["*"],
 )
 
@@ -34,8 +39,18 @@ async def status_check():
         "endpoints": {
             "health": "/health",
             "status": "/status",
-            "docs": "/docs"
+            "docs": "/docs",
+            "test": "/test"
         }
+    }
+
+@app.get("/test")
+async def test_endpoint():
+    """Test endpoint for frontend to verify backend connectivity"""
+    return {
+        "message": "Backend is working correctly!",
+        "timestamp": datetime.now().isoformat(),
+        "cors_enabled": True
     }
 
 if __name__ == "__main__":

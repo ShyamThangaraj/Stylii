@@ -28,6 +28,11 @@ sleep 2
 # Start Next.js frontend
 echo "🎨 Starting Next.js frontend on http://localhost:3000"
 cd ../frontend
+# Check if node_modules exists, if not run npm install
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing frontend dependencies..."
+    npm install
+fi
 npm run dev &
 FRONTEND_PID=$!
 

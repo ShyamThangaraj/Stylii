@@ -51,6 +51,18 @@ echo -e "${BLUE}🔍 Checking Frontend...${NC}"
 frontend_status=0
 check_url "$FRONTEND_URL" "Frontend (Next.js)" || frontend_status=1
 
+# Check if frontend dependencies are installed
+if [ -d "frontend" ]; then
+    if [ ! -d "frontend/node_modules" ]; then
+        echo -e "⚠️  ${YELLOW}Frontend dependencies not installed. Run 'npm install' in frontend directory.${NC}"
+    else
+        echo -e "✅ ${GREEN}Frontend dependencies${NC}: ${GREEN}INSTALLED${NC}"
+    fi
+else
+    echo -e "❌ ${RED}Frontend directory not found${NC}"
+    frontend_status=1
+fi
+
 echo ""
 
 # Check Backend
