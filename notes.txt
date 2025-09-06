@@ -1,0 +1,26 @@
+Ok so, pitch:
+
+- show photo from r/malelivingspace as "problem"
+- marketing to college students / young adults because (1) they have the least experience with buying interior design stuff, so less comfortable with it--we can make it more
+- affiliate links
+
+
+Can we use nb to generate a 360 degree panoramic image?
+
+We need:
+- mobile web app that allows taking a picture
+- database of products, including images, links, dimensions
+
+
+workflow:
+-
+
+pitch:
+- we're improving the experience for purchasing from amazon/ebay/ikea/etc
+- young adults (college students, etc) have little experience with decorating/furnishing. Consequence: spend more money and time than they needed to and/or end up with a less than optimal setup; or, no personalization [r/malelivingspace pic]
+- young adults like using new stuff like ai
+- we can transform the shopping experience
+
+- could expand with affiliate links
+
+- profit opportunity: we can have sponsored results, a la google search, maps, etc.
