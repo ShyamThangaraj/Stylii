@@ -1,17 +1,13 @@
-import { TopBar } from "@/components/top-bar"
-import { Hero } from "@/components/hero"
-import { HowItWorks } from "@/components/how-it-works"
-import { StylePreview } from "@/components/style-preview"
-import { Footer } from "@/components/footer"
+import { MultiStepDesignForm } from "@/components/multi-step-design-form"
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen">
-      <TopBar />
-      <Hero />
-      <HowItWorks />
-      <StylePreview />
-      <Footer />
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-2xl mx-auto">
+          <MultiStepDesignForm />
+        </div>
+      </div>
     </div>
   )
 }
