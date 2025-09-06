@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -28,7 +29,7 @@
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
+  --radius: 0.25rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
   --sidebar-primary: oklch(0.205 0 0);
@@ -37,10 +38,16 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  /* Updated to warm orange/amber color scheme instead of pink */
-  --stylii-primary: #f97316;
-  --stylii-secondary: #f59e0b;
-  --stylii-accent: #fb923c;
+  
+  /* Architectural Blueprint Color Palette */
+  --blueprint-charcoal: #2c3e50;
+  --blueprint-blue: #34495e;
+  --blueprint-white: #fafafa;
+  --blueprint-grid: #e5e7eb;
+  --blueprint-amber: #f39c12;
+  --blueprint-paper: #f8fafc;
+  --blueprint-light-grey: #ecf0f1;
+  --blueprint-technical: #1a252f;
 }
 
 .dark {
@@ -124,8 +131,8 @@
     @apply border-border outline-ring/50;
   }
   body {
-    /* Updated body background to warm gradient */
-    @apply bg-gradient-to-br from-orange-50 to-amber-50 text-foreground;
+    /* Professional clean background */
+    @apply bg-gray-50 text-foreground;
   }
 }
 
@@ -157,8 +164,8 @@
   animation: stylii-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Added warm gradient animation for loading states */
-@keyframes warm-gradient {
+/* Professional gradient for accents */
+@keyframes professional-gradient {
   0% {
     background-position: 0% 50%;
   }
@@ -170,19 +177,245 @@
   }
 }
 
-.warm-gradient-animate {
-  background: linear-gradient(-45deg, #f97316, #f59e0b, #fb923c, #fbbf24);
+.professional-gradient-animate {
+  background: linear-gradient(-45deg, #3b82f6, #1d4ed8, #2563eb, #1e40af);
   background-size: 400% 400%;
-  animation: warm-gradient 3s ease infinite;
+  animation: professional-gradient 3s ease infinite;
 }
 
-/* Force logo contrast with CSS override */
+/* Professional logo styling */
 .stylii-logo {
-  background-color: #ea580c !important;
+  background-color: #1f2937 !important;
   color: #ffffff !important;
 }
 
 .stylii-logo span {
   color: #ffffff !important;
   background-color: transparent !important;
+}
+
+/* Architectural Blueprint Design System */
+:root {
+  /* Architectural Blueprint Color Palette */
+  --blueprint-charcoal: #2c3e50;
+  --blueprint-blue: #34495e;
+  --blueprint-white: #fafafa;
+  --blueprint-grid: #e5e7eb;
+  --blueprint-amber: #f39c12;
+  --blueprint-paper: #f8fafc;
+  --blueprint-light-grey: #ecf0f1;
+  --blueprint-technical: #1a252f;
+}
+
+/* Construction Grid Background */
+.blueprint-grid {
+  background-image: 
+    linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 0;
+}
+
+/* Technical Typography */
+.blueprint-text {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  letter-spacing: 0.025em;
+}
+
+.blueprint-label {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--blueprint-charcoal);
+}
+
+/* Technical Ruler Progress */
+.technical-ruler {
+  position: relative;
+  height: 24px;
+  background: var(--blueprint-paper);
+  border: 1px solid var(--blueprint-charcoal);
+  border-radius: 2px;
+}
+
+.technical-ruler::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--blueprint-charcoal) 0px,
+    var(--blueprint-charcoal) 1px,
+    transparent 1px,
+    transparent 20%
+  );
+}
+
+.technical-ruler-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--blueprint-amber);
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
+.technical-ruler-marker {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: var(--blueprint-charcoal);
+  transition: left 0.3s ease;
+}
+
+/* Architectural Buttons */
+.blueprint-button {
+  background: transparent;
+  border: 1px solid var(--blueprint-charcoal);
+  color: var(--blueprint-charcoal);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  padding: 12px 24px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.blueprint-button:hover {
+  background: var(--blueprint-light-grey);
+  border-color: var(--blueprint-blue);
+}
+
+.blueprint-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.blueprint-button-primary {
+  background: var(--blueprint-charcoal);
+  color: white;
+  border-color: var(--blueprint-charcoal);
+}
+
+.blueprint-button-primary:hover {
+  background: var(--blueprint-blue);
+  border-color: var(--blueprint-blue);
+}
+
+/* Technical Form Inputs */
+.blueprint-input {
+  border: 1px solid var(--blueprint-charcoal);
+  background: var(--blueprint-paper);
+  color: var(--blueprint-technical);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.blueprint-input:focus {
+  outline: none;
+  border-color: var(--blueprint-blue);
+  box-shadow: 0 0 0 2px rgba(52, 73, 94, 0.1);
+}
+
+/* Technical Cards */
+.blueprint-card {
+  background: var(--blueprint-paper);
+  border: 1px solid var(--blueprint-charcoal);
+  border-radius: 4px;
+  position: relative;
+}
+
+.blueprint-card::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 32px;
+  height: 1px;
+  background: var(--blueprint-grid);
+}
+
+/* Technical Upload Zone */
+.blueprint-upload {
+  border: 2px dashed var(--blueprint-charcoal);
+  background: var(--blueprint-paper);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.blueprint-upload:hover,
+.blueprint-upload.active {
+  border-color: var(--blueprint-blue);
+  background: var(--blueprint-white);
+}
+
+.blueprint-upload::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  background-image: 
+    linear-gradient(var(--blueprint-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--blueprint-grid) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.blueprint-upload.active::before {
+  opacity: 0.3;
+}
+
+/* Technical Checkbox */
+.blueprint-checkbox {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--blueprint-charcoal);
+  border-radius: 2px;
+  background: var(--blueprint-paper);
+  position: relative;
+  cursor: pointer;
+}
+
+.blueprint-checkbox:checked {
+  background: var(--blueprint-charcoal);
+}
+
+.blueprint-checkbox:checked::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* Technical Loading */
+.blueprint-loading {
+  border: 2px solid var(--blueprint-grid);
+  border-top: 2px solid var(--blueprint-charcoal);
+  border-radius: 50%;
+  animation: blueprint-spin 1s linear infinite;
+}
+
+@keyframes blueprint-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

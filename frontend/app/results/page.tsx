@@ -1,10 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { TopBar } from "@/components/top-bar"
-import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-import { ArrowLeft } from "lucide-react"
 
 const DESIGN_STYLES = [
   {
@@ -54,62 +51,64 @@ export default function ResultsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-      <TopBar />
-
+    <div className="min-h-screen blueprint-grid" style={{backgroundColor: 'var(--blueprint-paper)'}}>
       <div className="container mx-auto px-4 py-4 md:py-8">
         {/* Header */}
         <div className="mb-6 md:mb-8">
-          <Button
-            variant="ghost"
+          <button
             onClick={() => router.back()}
-            className="mb-4 text-orange-600 hover:text-orange-700 hover:bg-orange-100 rounded-2xl"
+            className="blueprint-button mb-4 px-6 py-2"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Form
-          </Button>
+            Return to Form
+          </button>
 
-          <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4 text-balance">Your Design Options</h1>
+          <h1 className="text-2xl md:text-4xl font-bold blueprint-text mb-4 text-balance" style={{color: 'var(--blueprint-charcoal)'}}>Design Portfolio</h1>
+          <div className="blueprint-label">GENERATED DESIGN OPTIONS</div>
         </div>
 
         <div className="space-y-4 md:space-y-6">
           {DESIGN_STYLES.map((style, index) => (
             <div
               key={style.id}
-              className="bg-white rounded-3xl overflow-hidden shadow-xl border-2 border-orange-200 hover:shadow-2xl transition-all duration-300"
+              className="blueprint-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
             >
-              <div className="aspect-[16/9] md:aspect-[16/10] bg-gray-100 relative">
+              <div className="aspect-[16/9] md:aspect-[16/10] relative" style={{backgroundColor: 'var(--blueprint-light-grey)'}}>
                 <img
                   src={style.image || "/placeholder.svg"}
                   alt={`${style.name} design style`}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-3 left-3 md:top-6 md:left-6 bg-orange-500 text-white px-3 py-1 md:px-4 md:py-2 rounded-full text-xs md:text-sm font-medium">
-                  ✨ Style {index + 1}
+                <div className="absolute top-3 left-3 md:top-6 md:left-6 blueprint-card px-3 py-1 md:px-4 md:py-2">
+                  <span className="blueprint-label" style={{color: 'var(--blueprint-charcoal)'}}>
+                    OPTION {String(index + 1).padStart(2, '0')}
+                  </span>
                 </div>
               </div>
               <div className="p-4 md:p-8">
-                <h3 className="text-xl md:text-3xl font-bold text-gray-900 mb-2 md:mb-3">{style.name}</h3>
-                <p className="text-base md:text-lg text-gray-600 mb-4 md:mb-6">{style.description}</p>
-                <Button
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="blueprint-label text-xs">{String(index + 1).padStart(2, '0')}</div>
+                  <h3 className="text-xl md:text-3xl font-bold blueprint-text" style={{color: 'var(--blueprint-charcoal)'}}>{style.name}</h3>
+                </div>
+                <p className="text-base md:text-lg blueprint-text mb-4 md:mb-6" style={{color: 'var(--blueprint-blue)'}}>{style.description}</p>
+                <button
                   onClick={() => handleStyleSelect(style.id)}
-                  className="w-full md:w-auto bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-500 hover:to-amber-500 text-white rounded-2xl py-3 md:py-4 px-6 md:px-8 text-base md:text-lg font-medium transition-all duration-200 hover:scale-105"
+                  className="blueprint-button blueprint-button-primary w-full md:w-auto py-3 md:py-4 px-6 md:px-8 text-base md:text-lg"
                 >
-                  Choose This Design
-                </Button>
+                  Select Design Option
+                </button>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Loading State for New Generations */}
+      {/* Technical Loading State */}
       {isGenerating && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-3xl p-8 max-w-md mx-4 text-center">
-            <div className="animate-spin w-12 h-12 border-4 border-orange-200 border-t-orange-400 rounded-full mx-auto mb-4"></div>
-            <h3 className="text-lg font-semibold mb-2">Generating New Design</h3>
-            <p className="text-gray-600">Creating your personalized room design...</p>
+        <div className="fixed inset-0 flex items-center justify-center z-50" style={{backgroundColor: 'rgba(44, 62, 80, 0.9)'}}>
+          <div className="blueprint-card p-8 max-w-md mx-4 text-center">
+            <div className="blueprint-loading w-12 h-12 mx-auto mb-4"></div>
+            <h3 className="text-lg font-semibold blueprint-text mb-2" style={{color: 'var(--blueprint-charcoal)'}}>Processing Design Request</h3>
+            <p className="blueprint-text" style={{color: 'var(--blueprint-blue)'}}>Generating personalized room design...</p>
           </div>
         </div>
       )}

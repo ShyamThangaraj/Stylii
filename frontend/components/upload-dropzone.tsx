@@ -2,8 +2,6 @@
 
 import { useCallback, useState } from "react"
 import { useDropzone } from "react-dropzone"
-import { X, Upload } from "lucide-react"
-import { Button } from "@/components/ui/button"
 import { useStyliiStore } from "@/lib/store"
 
 export function UploadDropzone() {
@@ -36,50 +34,57 @@ export function UploadDropzone() {
 
   return (
     <div className="space-y-4">
-      {images.length < 4 && (
-        <div className="space-y-3">
+      <div className="space-y-2">
+        <div className="blueprint-label">IMAGE DOCUMENTATION</div>
+        {images.length < 4 && (
           <div
             {...getRootProps()}
-            className={`border-2 border-dashed rounded-2xl p-6 md:p-8 text-center cursor-pointer transition-colors ${
-              isDragActive ? "border-orange-400 bg-orange-50" : "border-gray-300 hover:border-orange-400"
+            className={`blueprint-upload p-8 text-center cursor-pointer ${
+              isDragActive ? "active" : ""
             }`}
           >
             <input {...getInputProps()} />
-            <Upload className="w-8 h-8 md:w-12 md:h-12 mx-auto mb-3 md:mb-4 text-gray-400" />
-            <p className="text-base md:text-lg font-medium mb-2">
-              {isDragActive ? "Drop images here" : "Drag & drop room photos"}
+            <div className="blueprint-label mb-4">UPLOAD</div>
+            <p className="blueprint-text text-base font-medium mb-2" style={{color: 'var(--blueprint-charcoal)'}}>
+              {isDragActive ? "DROP FILES HERE" : "UPLOAD ROOM IMAGES"}
             </p>
-            <p className="text-sm md:text-base text-gray-500">or click to browse • {4 - images.length} more needed</p>
+            <p className="blueprint-text text-sm" style={{color: 'var(--blueprint-blue)'}}>
+              Drag and drop files or click to browse • {images.length === 0 ? '1 image required' : `${4 - images.length} more optional`}
+            </p>
+          </div>
+        )}
+      </div>
+
+      {images.length > 0 && (
+        <div className="space-y-3">
+          <div className="blueprint-label">UPLOADED FILES</div>
+          <div className="grid grid-cols-2 gap-3">
+            {images.map((image, index) => (
+              <div key={index} className="relative group blueprint-card">
+                <img
+                  src={URL.createObjectURL(image) || "/placeholder.svg"}
+                  alt={`Room image ${index + 1}`}
+                  className="w-full h-32 object-cover"
+                />
+                <div className="absolute top-2 left-2 blueprint-label text-xs bg-white px-1">
+                  {String(index + 1).padStart(2, '0')}
+                </div>
+                <button
+                  className="absolute top-2 right-2 w-6 h-6 blueprint-button-primary text-xs opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => removeImage(index)}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       )}
 
-      {images.length > 0 && (
-        <div className="grid grid-cols-2 gap-3 md:gap-4">
-          {images.map((image, index) => (
-            <div key={index} className="relative group">
-              <img
-                src={URL.createObjectURL(image) || "/placeholder.svg"}
-                alt={`Room photo ${index + 1}`}
-                className="w-full h-24 md:h-32 object-cover rounded-lg"
-              />
-              <Button
-                size="sm"
-                variant="destructive"
-                className="absolute top-1 right-1 md:top-2 md:right-2 w-5 h-5 md:w-6 md:h-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-                onClick={() => removeImage(index)}
-              >
-                <X className="w-3 h-3 md:w-4 md:h-4" />
-              </Button>
-            </div>
-          ))}
-        </div>
-      )}
-
-      <p className="text-xs md:text-sm text-gray-500">
-        {images.length}/4 photos uploaded
-        {images.length >= 3 && <span className="text-green-600 ml-2">✓ Ready to generate</span>}
-      </p>
+      <div className="flex items-center justify-between blueprint-label">
+        <span>FILES: {images.length}/4</span>
+        {images.length >= 1 && <span style={{color: 'var(--blueprint-amber)'}}>READY FOR ANALYSIS</span>}
+      </div>
     </div>
   )
 }

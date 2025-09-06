@@ -1,10 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { TopBar } from "@/components/top-bar"
-import { Button } from "@/components/ui/button"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ArrowLeft, ShoppingBag, Video, ExternalLink } from "lucide-react"
 
 // TODO: Replace with actual product data from backend
 const MOCK_PRODUCTS = [
@@ -42,15 +39,14 @@ export default function SelectedDesignPage() {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-        <TopBar />
+      <div className="min-h-screen blueprint-grid" style={{backgroundColor: 'var(--blueprint-paper)'}}>
         <div className="container mx-auto px-4 py-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-200 rounded mb-6 w-48"></div>
-            <div className="h-96 bg-gray-200 rounded-3xl mb-6"></div>
+            <div className="h-8 blueprint-card rounded mb-6 w-48"></div>
+            <div className="h-96 blueprint-card rounded mb-6"></div>
             <div className="flex gap-4">
-              <div className="h-12 bg-gray-200 rounded-2xl w-48"></div>
-              <div className="h-12 bg-gray-200 rounded-2xl w-48"></div>
+              <div className="h-12 blueprint-card rounded w-48"></div>
+              <div className="h-12 blueprint-card rounded w-48"></div>
             </div>
           </div>
         </div>
@@ -62,101 +58,99 @@ export default function SelectedDesignPage() {
   const styleName = styleId.charAt(0).toUpperCase() + styleId.slice(1).replace("-", " ")
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50">
-      <TopBar />
-
+    <div className="min-h-screen blueprint-grid" style={{backgroundColor: 'var(--blueprint-paper)'}}>
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <Button
-            variant="ghost"
+          <button
             onClick={() => router.back()}
-            className="mb-4 text-orange-600 hover:text-orange-700 hover:bg-orange-100"
+            className="blueprint-button mb-4 px-6 py-2"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Results
-          </Button>
+            Return to Results
+          </button>
 
-          <h1 className="text-4xl font-bold text-gray-900 mb-2 text-balance">{styleName} Design</h1>
-          <p className="text-xl text-gray-600">Your personalized room design with AI-generated visualization</p>
+          <h1 className="text-4xl font-bold blueprint-text mb-2 text-balance" style={{color: 'var(--blueprint-charcoal)'}}>{styleName} Design</h1>
+          <div className="blueprint-label mb-2">AI GENERATED DESIGN VISUALIZATION</div>
+          <p className="text-xl blueprint-text" style={{color: 'var(--blueprint-blue)'}}>Personalized room design with technical specifications</p>
         </div>
 
         {/* Main Design Image */}
-        <div className="bg-white rounded-3xl overflow-hidden shadow-lg border border-orange-100 mb-8">
-          <div className="aspect-[16/10] bg-gray-100 relative">
+        <div className="blueprint-card overflow-hidden shadow-lg mb-8">
+          <div className="aspect-[16/10] relative" style={{backgroundColor: 'var(--blueprint-light-grey)'}}>
             {/* TODO: Replace with actual AI-generated image from backend */}
             <img
               src={`/abstract-geometric-shapes.png?height=600&width=960&query=${styleId} living room design detailed view`}
               alt={`${styleName} room design`}
               className="w-full h-full object-cover"
             />
-            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
-              <span className="text-sm font-medium text-gray-700">AI Generated Design</span>
+            <div className="absolute top-6 left-6 blueprint-card px-4 py-2">
+              <span className="blueprint-label text-xs" style={{color: 'var(--blueprint-charcoal)'}}>AI GENERATED DESIGN</span>
             </div>
           </div>
         </div>
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-between gap-4 mb-8">
-          <Button
+          <button
             onClick={() => setShowProducts(!showProducts)}
-            className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-orange-400 to-amber-400 hover:from-orange-500 hover:to-amber-500 text-white rounded-2xl font-medium text-lg sm:w-auto w-full"
+            className="blueprint-button blueprint-button-primary flex items-center justify-center gap-3 px-8 py-4 text-lg sm:w-auto w-full"
           >
-            <ShoppingBag className="w-5 h-5" />
-            {showProducts ? "Hide Products" : "Show Product List"}
-          </Button>
+            {showProducts ? "Hide Product Specifications" : "Show Product Specifications"}
+          </button>
 
-          <Button
+          <button
             onClick={handleGenerateVideo}
             disabled={isGeneratingVideo}
-            className="flex items-center justify-center gap-3 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-2xl font-medium text-lg sm:w-auto w-full"
+            className="blueprint-button flex items-center justify-center gap-3 px-8 py-4 text-lg sm:w-auto w-full disabled:opacity-50"
           >
-            <Video className="w-5 h-5" />
-            {isGeneratingVideo ? "Generating Video..." : "Generate Video"}
-          </Button>
+            {isGeneratingVideo ? "Generating Video..." : "Generate Video Walkthrough"}
+          </button>
         </div>
 
         {/* Products List */}
         {showProducts && (
-          <div className="bg-white rounded-3xl p-8 shadow-lg border border-orange-100">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Products</h2>
+          <div className="blueprint-card p-8 shadow-lg">
+            <div className="blueprint-label mb-6">FEATURED PRODUCT SPECIFICATIONS</div>
+            <h2 className="text-2xl font-bold blueprint-text mb-6" style={{color: 'var(--blueprint-charcoal)'}}>Product Recommendations</h2>
             <div className="space-y-4">
-              {MOCK_PRODUCTS.map((product) => (
+              {MOCK_PRODUCTS.map((product, index) => (
                 <div
                   key={product.id}
-                  className="flex items-center justify-between p-4 bg-orange-50 rounded-2xl hover:bg-orange-100 transition-colors"
+                  className="flex items-center justify-between p-4 border transition-colors hover:bg-gray-50"
+                  style={{borderColor: 'var(--blueprint-charcoal)', backgroundColor: 'var(--blueprint-paper)'}}
                 >
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{product.name}</h3>
-                    <p className="text-orange-600 font-medium">{product.price}</p>
+                  <div className="flex items-center gap-4">
+                    <div className="blueprint-label text-xs">{String(index + 1).padStart(2, '0')}</div>
+                    <div>
+                      <h3 className="font-semibold blueprint-text" style={{color: 'var(--blueprint-charcoal)'}}>{product.name}</h3>
+                      <p className="blueprint-text font-medium" style={{color: 'var(--blueprint-amber)'}}>{product.price}</p>
+                    </div>
                   </div>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="border-orange-200 text-orange-600 hover:bg-orange-50 bg-transparent"
+                  <a
+                    href={product.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="blueprint-button px-4 py-2"
                   >
-                    <a href={product.url} target="_blank" rel="noopener noreferrer">
-                      <ExternalLink className="w-4 h-4 mr-2" />
-                      View Product
-                    </a>
-                  </Button>
+                    View Product Details
+                  </a>
                 </div>
               ))}
             </div>
             {/* TODO: Replace with actual product recommendations from backend */}
-            <p className="text-sm text-gray-500 mt-4 text-center">
-              * Product recommendations will be populated from your backend API
+            <p className="blueprint-text text-sm mt-4 text-center" style={{color: 'var(--blueprint-blue)'}}>
+              Product recommendations will be populated from backend API integration
             </p>
           </div>
         )}
 
         {/* Video Generation Loading */}
         {isGeneratingVideo && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-            <div className="bg-white rounded-3xl p-8 max-w-md mx-4 text-center">
-              <div className="animate-spin w-12 h-12 border-4 border-purple-200 border-t-purple-500 rounded-full mx-auto mb-4"></div>
-              <h3 className="text-lg font-semibold mb-2">Generating Video</h3>
-              <p className="text-gray-600">Creating a video walkthrough using Fal AI...</p>
+          <div className="fixed inset-0 flex items-center justify-center z-50" style={{backgroundColor: 'rgba(44, 62, 80, 0.9)'}}>
+            <div className="blueprint-card p-8 max-w-md mx-4 text-center">
+              <div className="blueprint-loading w-12 h-12 mx-auto mb-4"></div>
+              <h3 className="text-lg font-semibold blueprint-text mb-2" style={{color: 'var(--blueprint-charcoal)'}}>Generating Video Walkthrough</h3>
+              <p className="blueprint-text" style={{color: 'var(--blueprint-blue)'}}>Creating video presentation using Fal AI...</p>
               {/* TODO: Integrate with actual Fal AI video generation */}
             </div>
           </div>
