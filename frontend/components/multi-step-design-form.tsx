@@ -9,6 +9,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { UploadDropzone } from "./upload-dropzone"
 import { useStyliiStore } from "@/lib/store"
 import { useRouter } from "next/navigation"
+import { generateDesign, checkBackendHealth } from "@/lib/client"
+import type { StreamingProgress } from "@/lib/client"
 
 const PRODUCT_TYPES = [
   { id: "furniture", label: "Furniture", description: "Sofas, chairs, tables, beds" },
@@ -22,14 +24,32 @@ const PRODUCT_TYPES = [
 export function MultiStepDesignForm() {
   const [currentStep, setCurrentStep] = useState(0)
   const [mounted, setMounted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [loadingStep, setLoadingStep] = useState("")
+  const [backendHealthy, setBackendHealthy] = useState<boolean | null>(null)
 
-  const { images, budget, notes, selectedProducts, setBudget, setNotes, setSelectedProducts } = useStyliiStore()
+  const {
+    images,
+    budget,
+    notes,
+    selectedProducts,
+    style,
+    isGenerating,
+    currentProgress,
+    error,
+    setBudget,
+    setNotes,
+    setSelectedProducts,
+    setStyle,
+    setIsGenerating,
+    setProgress,
+    setError,
+    addResult,
+  } = useStyliiStore()
   const router = useRouter()
 
   useEffect(() => {
     setMounted(true)
+    // Check backend health on mount
+    checkBackendHealth().then(setBackendHealthy)
   }, [])
 
   const steps = [
@@ -47,6 +67,11 @@ export function MultiStepDesignForm() {
       title: "Room Documentation",
       subtitle: "Upload high-quality images of your space for analysis",
       component: <PhotoStep />,
+    },
+    {
+      title: "Design Style",
+      subtitle: "Choose your preferred interior design style",
+      component: <StyleStep style={style} setStyle={setStyle} />,
     },
     {
       title: "Product Categories",
@@ -69,8 +94,10 @@ export function MultiStepDesignForm() {
       case 2:
         return images.length >= 1
       case 3:
-        return selectedProducts.length > 0
+        return style !== ""
       case 4:
+        return selectedProducts.length > 0
+      case 5:
         return true
       default:
         return false
@@ -90,26 +117,37 @@ export function MultiStepDesignForm() {
   }
 
   const handleSubmit = async () => {
-    setIsLoading(true)
-
-    const loadingSteps = [
-      "Analyzing your room photos...",
-      "Generating design 1...",
-      "Generating design 2...",
-      "Generating design 3...",
-      "Generating design 4...",
-      "Generating design 5...",
-      "Generating design 6...",
-      "Finalizing your designs...",
-      "Almost ready!",
-    ]
-
-    for (let i = 0; i < loadingSteps.length; i++) {
-      setLoadingStep(loadingSteps[i])
-      await new Promise((resolve) => setTimeout(resolve, 800))
+    if (!images || images.length === 0) {
+      setError('Please upload at least one image')
+      return
     }
 
-    router.push("/results")
+    try {
+      setIsGenerating(true)
+      setError(null)
+      setProgress({ status: 'starting', message: 'Initializing design generation...' })
+
+      const result = await generateDesign(
+        {
+          images,
+          style,
+          budget,
+          notes,
+          selectedProducts,
+        },
+        (progress: StreamingProgress) => {
+          setProgress(progress)
+        }
+      )
+
+      addResult(result)
+      router.push('/results')
+    } catch (error) {
+      console.error('Design generation failed:', error)
+      setError(error instanceof Error ? error.message : 'Failed to generate design')
+      setIsGenerating(false)
+      setProgress(null)
+    }
   }
 
   if (!mounted) {
@@ -121,7 +159,7 @@ export function MultiStepDesignForm() {
     )
   }
 
-  if (isLoading) {
+  if (isGenerating) {
     return (
       <div className="fixed inset-0 blueprint-grid flex items-center justify-center z-50" style={{backgroundColor: 'var(--blueprint-paper)'}}>
         <div className="blueprint-card p-8 md:p-12 max-w-md mx-4 text-center shadow-lg">
@@ -129,8 +167,15 @@ export function MultiStepDesignForm() {
             <div className="blueprint-loading w-12 h-12 mx-auto"></div>
           </div>
           <h3 className="text-xl md:text-2xl font-semibold blueprint-text mb-3" style={{color: 'var(--blueprint-charcoal)'}}>Processing Your Request</h3>
-          <p className="blueprint-text font-medium text-base mb-2" style={{color: 'var(--blueprint-amber)'}}>{loadingStep}</p>
+          <p className="blueprint-text font-medium text-base mb-2" style={{color: 'var(--blueprint-amber)'}}>
+            {currentProgress?.message || 'Processing...'}
+          </p>
           <p className="blueprint-text text-sm" style={{color: 'var(--blueprint-blue)'}}>Please wait while we analyze your data...</p>
+          {error && (
+            <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+              {error}
+            </div>
+          )}
         </div>
       </div>
     )
@@ -138,6 +183,22 @@ export function MultiStepDesignForm() {
 
   return (
     <div className="blueprint-card blueprint-grid p-6 md:p-8 shadow-sm">
+      {/* Backend Health Check */}
+      {backendHealthy === false && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
+          <p className="text-red-700 text-sm">
+            ⚠️ Backend service is not available. Please ensure the backend is running on localhost:8000.
+          </p>
+        </div>
+      )}
+      
+      {/* Error Display */}
+      {error && (
+        <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded">
+          <p className="text-red-700 text-sm">{error}</p>
+        </div>
+      )}
+
       {/* Technical Ruler Progress */}
       <div className="mb-6 md:mb-8">
         <div className="flex justify-between items-center mb-4">
@@ -181,7 +242,7 @@ export function MultiStepDesignForm() {
         {currentStep === steps.length - 1 ? (
           <button
             onClick={handleSubmit}
-            disabled={!canProceed()}
+            disabled={!canProceed() || backendHealthy === false}
             className="blueprint-button blueprint-button-primary w-full md:w-auto px-8 py-2.5 order-1 md:order-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Generate Design
@@ -349,6 +410,62 @@ function IntroStep() {
             <p className="text-sm blueprint-text" style={{color: 'var(--blueprint-blue)'}}>Curated furniture and decor suggestions</p>
           </div>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function StyleStep({ style, setStyle }: { style: string; setStyle: (style: string) => void }) {
+  const styles = [
+    { id: "modern", name: "Modern", description: "Clean lines, minimal clutter, neutral colors" },
+    { id: "scandinavian", name: "Scandinavian", description: "Light woods, cozy textures, functional design" },
+    { id: "industrial", name: "Industrial", description: "Raw materials, exposed elements, urban feel" },
+    { id: "bohemian", name: "Bohemian", description: "Eclectic patterns, rich textures, global influences" },
+    { id: "midcentury modern", name: "Mid-Century Modern", description: "Retro furniture, bold colors, geometric shapes" },
+    { id: "traditional", name: "Traditional", description: "Classic elegance, rich fabrics, timeless appeal" },
+  ]
+
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3">
+        {styles.map((styleOption, index) => (
+          <div
+            key={styleOption.id}
+            className={`blueprint-card p-4 cursor-pointer transition-all ${
+              style === styleOption.id
+                ? "bg-amber-50" 
+                : "hover:bg-gray-50"
+            }`}
+            onClick={() => setStyle(styleOption.id)}
+            style={{
+              borderColor: style === styleOption.id 
+                ? 'var(--blueprint-amber)' 
+                : 'var(--blueprint-charcoal)'
+            }}
+          >
+            <div className="flex items-start gap-3">
+              <input
+                type="radio"
+                checked={style === styleOption.id}
+                onChange={() => setStyle(styleOption.id)}
+                className="blueprint-radio mt-1"
+              />
+              <div className="flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="blueprint-label text-xs">{String(index + 1).padStart(2, '0')}</div>
+                  <h3 className="font-semibold blueprint-text" style={{color: 'var(--blueprint-charcoal)'}}>{styleOption.name}</h3>
+                </div>
+                <p className="text-sm blueprint-text" style={{color: 'var(--blueprint-blue)'}}>{styleOption.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="blueprint-card p-4">
+        <div className="blueprint-label mb-2">STYLE SELECTION</div>
+        <p className="blueprint-text text-sm" style={{color: 'var(--blueprint-blue)'}}>
+          Style selection influences AI design generation algorithms and product recommendation filtering parameters.
+        </p>
       </div>
     </div>
   )

@@ -1,4 +1,6 @@
-// Mock client functions for Stylii - frontend only, no real APIs
+// Real API client for backend integration
+
+const API_BASE_URL = 'http://localhost:8000'
 
 export interface Style {
   id: string
@@ -14,6 +16,7 @@ export interface Product {
   price: number
   image: string
   url: string
+  thumbnail?: string
 }
 
 export interface DesignResult {
@@ -24,6 +27,10 @@ export interface DesignResult {
   budget: number
   createdAt: Date
   latency: number
+  designerData?: any
+  roomAnalysis?: any
+  designCritique?: any
+  userPreferences?: any
 }
 
 export interface GenerateDesignInput {
@@ -31,64 +38,138 @@ export interface GenerateDesignInput {
   style: string
   budget: number
   notes?: string
+  selectedProducts?: string[]
 }
 
-// Mock delay function
+export interface StreamingProgress {
+  status: string
+  message: string
+  step?: number
+  data?: any
+}
+
+export type ProgressCallback = (progress: StreamingProgress) => void
+
+// Utility function for delay
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
-export async function generateDesign(input: GenerateDesignInput): Promise<DesignResult> {
-  // Simulate processing time
-  await delay(3000 + Math.random() * 2000)
+export async function generateDesign(
+  input: GenerateDesignInput,
+  onProgress?: ProgressCallback
+): Promise<DesignResult> {
+  const startTime = Date.now()
+  
+  if (!input.images || input.images.length === 0) {
+    throw new Error('At least one image is required')
+  }
 
-  const mockProducts: Product[] = [
-    {
-      id: "1",
-      title: "Modern Sectional Sofa",
-      vendor: "West Elm",
-      price: 1299,
-      image: "/modern-sectional-sofa.png",
-      url: "#",
-    },
-    {
-      id: "2",
-      title: "Ceramic Table Lamp",
-      vendor: "CB2",
-      price: 199,
-      image: "/placeholder-qh67b.png",
-      url: "#",
-    },
-    {
-      id: "3",
-      title: "Wool Area Rug",
-      vendor: "Article",
-      price: 449,
-      image: "/wool-area-rug.png",
-      url: "#",
-    },
-    {
-      id: "4",
-      title: "Oak Coffee Table",
-      vendor: "Room & Board",
-      price: 699,
-      image: "/placeholder-d49af.png",
-      url: "#",
-    },
-  ]
-
-  return {
-    id: Math.random().toString(36).substr(2, 9),
-    renderUrl: "/placeholder-ypfod.png",
-    products: mockProducts,
-    style: input.style,
+  // Prepare form data for the backend API
+  const formData = new FormData()
+  formData.append('image', input.images[0]) // Use first image
+  
+  // Create preferences string from input
+  const preferences = {
     budget: input.budget,
-    createdAt: new Date(),
-    latency: 3.2,
+    style: input.style,
+    notes: input.notes || '',
+    selectedProducts: input.selectedProducts || [],
+  }
+  formData.append('preferences', JSON.stringify(preferences))
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/design`, {
+      method: 'POST',
+      body: formData,
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    if (!response.body) {
+      throw new Error('No response body')
+    }
+
+    const reader = response.body.getReader()
+    const decoder = new TextDecoder()
+    let buffer = ''
+    let finalResult: any = null
+
+    while (true) {
+      const { done, value } = await reader.read()
+      
+      if (done) break
+      
+      buffer += decoder.decode(value, { stream: true })
+      const lines = buffer.split('\n')
+      buffer = lines.pop() || '' // Keep the last incomplete line in buffer
+      
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          try {
+            const data = JSON.parse(line.slice(6))
+            
+            if (data.error) {
+              throw new Error(data.error)
+            }
+            
+            if (data.status === 'completed' && data.success) {
+              finalResult = data
+            } else if (onProgress) {
+              onProgress({
+                status: data.status || 'processing',
+                message: data.message || 'Processing...',
+                data,
+              })
+            }
+          } catch (e) {
+            console.warn('Failed to parse SSE data:', line, e)
+          }
+        }
+      }
+    }
+
+    if (!finalResult) {
+      throw new Error('No final result received from server')
+    }
+
+    // Transform backend response to frontend format
+    const products: Product[] = (finalResult.designer_data?.product_recommendations || []).map((product: any, index: number) => ({
+      id: `${index + 1}`,
+      title: product.title || 'Unknown Product',
+      vendor: product.vendor || 'Unknown',
+      price: product.price || 0,
+      image: product.thumbnail || '/placeholder.png',
+      url: product.url || '#',
+      thumbnail: product.thumbnail,
+    }))
+
+    const endTime = Date.now()
+    const latency = (endTime - startTime) / 1000
+
+    return {
+      id: finalResult.request_id || Math.random().toString(36).substr(2, 9),
+      renderUrl: finalResult.generated_image?.data ? `data:image/png;base64,${finalResult.generated_image.data}` : '/placeholder.png',
+      products,
+      style: input.style,
+      budget: input.budget,
+      createdAt: new Date(),
+      latency,
+      designerData: finalResult.designer_data,
+      roomAnalysis: finalResult.designer_data?.room_analysis,
+      designCritique: finalResult.designer_data?.design_critique,
+      userPreferences: finalResult.designer_data?.user_preferences,
+    }
+  } catch (error) {
+    console.error('Error generating design:', error)
+    throw error
   }
 }
 
 export async function listStyles(): Promise<Style[]> {
   await delay(500)
 
+  // Updated to match backend supported styles
   return [
     {
       id: "modern",
@@ -103,32 +184,20 @@ export async function listStyles(): Promise<Style[]> {
       thumbnail: "/scandinavian-interior.png",
     },
     {
-      id: "minimalist",
-      name: "Minimalist",
-      description: "Less is more, open spaces, simple forms",
-      thumbnail: "/minimalist-interior.png",
-    },
-    {
-      id: "rustic",
-      name: "Rustic",
-      description: "Natural materials, warm tones, vintage charm",
-      thumbnail: "/placeholder-u3rao.png",
-    },
-    {
       id: "industrial",
       name: "Industrial",
       description: "Raw materials, exposed elements, urban feel",
       thumbnail: "/industrial-interior.png",
     },
     {
-      id: "boho",
-      name: "Boho",
+      id: "bohemian",
+      name: "Bohemian",
       description: "Eclectic patterns, rich textures, global influences",
       thumbnail: "/placeholder-v34fv.png",
     },
     {
-      id: "mid-century",
-      name: "Mid-Century",
+      id: "midcentury modern",
+      name: "Mid-Century Modern",
       description: "Retro furniture, bold colors, geometric shapes",
       thumbnail: "/placeholder-5far1.png",
     },
@@ -138,42 +207,29 @@ export async function listStyles(): Promise<Style[]> {
       description: "Classic elegance, rich fabrics, timeless appeal",
       thumbnail: "/traditional-interior.png",
     },
-    {
-      id: "japandi",
-      name: "Japandi",
-      description: "Japanese minimalism meets Scandinavian hygge",
-      thumbnail: "/placeholder-36rnn.png",
-    },
-    {
-      id: "coastal",
-      name: "Coastal",
-      description: "Ocean-inspired, light blues, natural textures",
-      thumbnail: "/placeholder-bh2y5.png",
-    },
   ]
+}
+
+// Health check function for backend connectivity
+export async function checkBackendHealth(): Promise<boolean> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/health`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    return response.ok
+  } catch (error) {
+    console.error('Backend health check failed:', error)
+    return false
+  }
 }
 
 export async function listPastResults(): Promise<DesignResult[]> {
   await delay(300)
 
-  return [
-    {
-      id: "1",
-      renderUrl: "/modern-living-room.png",
-      products: [],
-      style: "Modern",
-      budget: 5000,
-      createdAt: new Date(Date.now() - 86400000),
-      latency: 2.8,
-    },
-    {
-      id: "2",
-      renderUrl: "/placeholder-fobdf.png",
-      products: [],
-      style: "Scandinavian",
-      budget: 3000,
-      createdAt: new Date(Date.now() - 172800000),
-      latency: 3.1,
-    },
-  ]
+  // For now, return empty array since backend doesn't store past results
+  // In a real app, this would fetch from a database or storage service
+  return []
 }
