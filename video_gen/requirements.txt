@@ -1,0 +1,23 @@
+# Requirements for fallai.py - Room Tour Generator
+
+# Google Gemini API for AI narration generation
+google-genai>=0.3.0
+
+# ElevenLabs API for text-to-speech conversion
+elevenlabs>=1.0.0
+
+# FAL AI client for Veo2 image-to-video generation
+fal-client>=0.4.0
+
+# Image processing
+Pillow>=10.0.0
+
+# HTTP requests for downloading generated videos
+requests>=2.31.0
+
+# Optional: Environment variable management
+python-dotenv>=1.0.0
+
+# Note: This script also requires ffmpeg to be installed on your system
+# Install ffmpeg with: winget install -e --id Gyan.FFmpeg (Windows)
+# or visit: https://ffmpeg.org/download.html
