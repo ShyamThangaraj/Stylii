@@ -171,7 +171,7 @@ export function VideoGeneration({ imageUrl }: VideoGenerationProps) {
                 ✅ Video generated successfully! Duration: {progress.result.duration.toFixed(1)}s
               </p>
               <p className="text-green-600 text-xs mt-1">
-                Output: {progress.result.output_path}
+                <a href={progress.result.output_path}>Video</a>
               </p>
             </div>
           )}
