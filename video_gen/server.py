@@ -105,18 +105,18 @@ def image_aspect_choice(path):
 def task_gemini_and_tts(image_path, eleven_key, google_key, job_id, temp_dir):
     try:
         update_progress(job_id, 'processing', 'Generating narration with Gemini...', 25)
-        
+
         client = genai.Client(api_key=google_key)
         prompt = ("You are a room tour expert. Describe this room and focus on the furniture/decor in ~3 engaging sentences (~10 seconds of speech).")
         img = Image.open(image_path)
         resp = client.models.generate_content(model="gemini-2.5-flash", contents=[prompt, img])
         narration_text = pick_text(resp).strip()
-        
+
         update_progress(job_id, 'processing', f'Generated narration: {narration_text[:50]}...', 35)
-        
+
         audio_path = temp_dir / "voiceover.mp3"
         update_progress(job_id, 'processing', 'Converting text to speech...', 45)
-        
+
         eleven = ElevenLabs(api_key=eleven_key)
         audio_stream = eleven.text_to_speech.convert(
             text=narration_text,
@@ -127,7 +127,7 @@ def task_gemini_and_tts(image_path, eleven_key, google_key, job_id, temp_dir):
         with open(audio_path, "wb") as f:
             for chunk in audio_stream:
                 f.write(chunk)
-        
+
         update_progress(job_id, 'processing', 'Audio generation completed', 55)
         return str(audio_path)
     except Exception as e:
@@ -137,12 +137,12 @@ def task_gemini_and_tts(image_path, eleven_key, google_key, job_id, temp_dir):
 def task_veo2_generate_and_download(image_path, job_id, temp_dir):
     try:
         update_progress(job_id, 'processing', 'Starting video generation with Veo2...', 10)
-        
+
         aspect = image_aspect_choice(image_path)
         img_url = fal_client.upload_file(image_path)
-        
+
         update_progress(job_id, 'processing', 'Image uploaded, generating video...', 15)
-        
+
         result = fal_client.subscribe(
             "fal-ai/veo2/image-to-video",
             arguments={
@@ -154,19 +154,19 @@ def task_veo2_generate_and_download(image_path, job_id, temp_dir):
             with_logs=True,
             on_queue_update=on_queue_update_factory(job_id),
         )
-        
+
         video_url = get_video_url(result)
         video_path = temp_dir / "veo2.mp4"
-        
+
         update_progress(job_id, 'processing', 'Downloading generated video...', 60)
-        
+
         with requests.get(video_url, stream=True) as r:
             r.raise_for_status()
             with open(video_path, "wb") as f:
                 for chunk in r.iter_content(8192):
                     if chunk:
                         f.write(chunk)
-        
+
         update_progress(job_id, 'processing', 'Video download completed', 70)
         return str(video_path)
     except Exception as e:
@@ -184,24 +184,24 @@ def audio_duration_seconds(path):
 def process_video_generation(image_path, job_id):
     try:
         update_progress(job_id, 'processing', 'Starting video generation process...', 0)
-        
+
         # Create temporary directory for this job
         temp_dir = pathlib.Path(tempfile.mkdtemp())
-        
+
         with ThreadPoolExecutor(max_workers=3) as ex:
             fut_video = ex.submit(task_veo2_generate_and_download, image_path, job_id, temp_dir)
             fut_audio = ex.submit(task_gemini_and_tts, image_path, ELEVEN_KEY, GOOGLE_KEY, job_id, temp_dir)
 
             video_path = fut_video.result()
             audio_path = fut_audio.result()
-            
+
         update_progress(job_id, 'processing', 'Combining video and audio...', 80)
-        
+
         # Exact trim to audio length
         aud_dur = audio_duration_seconds(audio_path)
-        
+
         output_path = temp_dir / "final_with_audio_1080p.mp4"
-        
+
         vf = f"fps={TARGET_FPS},scale={TARGET_WIDTH}:-2:flags=lanczos"
         ffmpeg_cmd = [
             ffmpeg, "-y",
@@ -218,12 +218,12 @@ def process_video_generation(image_path, job_id):
         ]
 
         subprocess.run(ffmpeg_cmd, check=True, capture_output=True, text=True)
-        
+
         update_progress(job_id, 'completed', 'Video generation completed successfully!', 100, {
             'output_path': str(output_path),
             'duration': aud_dur
         })
-        
+
     except Exception as e:
         update_progress(job_id, 'error', f'Processing failed: {str(e)}')
 
@@ -233,25 +233,25 @@ def generate_video():
     try:
         if 'image' not in request.files:
             return jsonify({'error': 'No image file provided'}), 400
-        
+
         image_file = request.files['image']
         if image_file.filename == '':
             return jsonify({'error': 'No image file selected'}), 400
-        
+
         # Save uploaded image
         temp_dir = pathlib.Path(tempfile.mkdtemp())
         image_path = temp_dir / image_file.filename
         image_file.save(str(image_path))
-        
+
         job_id = str(uuid.uuid4())
-        
+
         # Process synchronously for non-streaming endpoint
         process_video_generation(str(image_path), job_id)
-        
+
         # Get final result
         with progress_lock:
             final_result = progress_store.get(job_id, {})
-        
+
         if final_result.get('status') == 'completed':
             return jsonify({
                 'status': 'success',
@@ -265,7 +265,7 @@ def generate_video():
                 'job_id': job_id,
                 'message': final_result.get('message', 'Unknown error occurred')
             }), 500
-            
+
     except Exception as e:
         return jsonify({'error': f'Server error: {str(e)}'}), 500
 
@@ -275,41 +275,41 @@ def generate_video_stream():
     try:
         if 'image' not in request.files:
             return jsonify({'error': 'No image file provided'}), 400
-        
+
         image_file = request.files['image']
         if image_file.filename == '':
             return jsonify({'error': 'No image file selected'}), 400
-        
+
         # Save uploaded image
         temp_dir = pathlib.Path(tempfile.mkdtemp())
         image_path = temp_dir / image_file.filename
         image_file.save(str(image_path))
-        
+
         job_id = str(uuid.uuid4())
-        
+
         # Start processing in background
         thread = threading.Thread(target=process_video_generation, args=(str(image_path), job_id))
         thread.start()
-        
+
         def generate():
             yield f"data: {json.dumps({'job_id': job_id, 'status': 'started'})}\n\n"
-            
+
             last_timestamp = 0
             while True:
                 with progress_lock:
                     current_progress = progress_store.get(job_id, {})
-                
+
                 if current_progress and current_progress.get('timestamp', 0) > last_timestamp:
                     last_timestamp = current_progress.get('timestamp', 0)
                     yield f"data: {json.dumps(current_progress)}\n\n"
-                    
+
                     if current_progress.get('status') in ['completed', 'error']:
                         break
-                
+
                 time.sleep(0.5)  # Poll every 500ms
-        
+
         return Response(generate(), mimetype='text/plain')
-        
+
     except Exception as e:
         return jsonify({'error': f'Server error: {str(e)}'}), 500
 
@@ -318,10 +318,10 @@ def get_status(job_id):
     """Get current status of a job"""
     with progress_lock:
         progress = progress_store.get(job_id)
-    
+
     if not progress:
         return jsonify({'error': 'Job not found'}), 404
-    
+
     return jsonify(progress)
 
 @app.route('/health', methods=['GET'])
@@ -336,5 +336,5 @@ def health_check():
 if __name__ == '__main__':
     if not ffmpeg or not ffprobe:
         print("Warning: FFmpeg/ffprobe not found. Some functionality may not work.")
-    
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
+    app.run(debug=True, host='0.0.0.0', port=5001)

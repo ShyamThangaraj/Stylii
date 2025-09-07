@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { useStyliiStore } from "@/lib/store"
 import Image from "next/image"
+import { VideoGeneration } from "@/components/video-generation"
 
 export default function ResultsPage() {
   const router = useRouter()
@@ -104,6 +105,9 @@ export default function ResultsPage() {
                 </div>
               </div>
             </div>
+
+            {/* Video Generation */}
+            <VideoGeneration imageUrl={currentResult.renderUrl} />
 
             {/* Product Recommendations */}
             {currentResult.products.length > 0 && (

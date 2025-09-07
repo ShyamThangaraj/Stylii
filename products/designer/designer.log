@@ -364,3 +364,166 @@
 2025-09-06 16:39:25,430 - __main__ - INFO - [req_1757201927] Found 7 product recommendations
 2025-09-06 16:39:25,430 - __main__ - INFO - [req_1757201927] Streaming analysis completed successfully
 2025-09-06 16:39:25,431 - __main__ - INFO - [req_1757201927] Cleaning up temporary file: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/room.jpg
+2025-09-06 17:00:45,662 - __main__ - INFO - Importing designer modules...
+2025-09-06 17:00:45,699 - __main__ - INFO - Designer modules imported successfully
+2025-09-06 17:00:45,700 - __main__ - INFO - Flask application initialized
+2025-09-06 17:00:45,700 - __main__ - INFO - Configuration set - Upload folder: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T
+2025-09-06 17:00:45,700 - __main__ - INFO - Configuration set - Max file size: 16777216 bytes
+2025-09-06 17:00:45,700 - __main__ - INFO - Configuration set - Allowed extensions: {'bmp', 'jpg', 'gif', 'png', 'jpeg'}
+2025-09-06 17:00:45,700 - __main__ - INFO - Initializing AI components...
+2025-09-06 17:00:45,700 - __main__ - INFO - Loading API keys from .env file...
+2025-09-06 17:00:45,701 - __main__ - INFO - API keys loaded successfully
+2025-09-06 17:00:45,701 - __main__ - INFO - Creating ImageAnalyzer instance...
+2025-09-06 17:00:45,701 - __main__ - INFO - Creating DesignCritic instance...
+2025-09-06 17:00:45,701 - __main__ - INFO - Creating InputParser instance...
+2025-09-06 17:00:45,701 - __main__ - INFO - Creating ProductFinder instance...
+2025-09-06 17:00:45,701 - __main__ - INFO - All AI components initialized successfully
+2025-09-06 17:00:45,702 - __main__ - INFO - Starting Interior Designer API Server...
+2025-09-06 17:00:45,702 - __main__ - INFO - Available endpoints:
+2025-09-06 17:00:45,702 - __main__ - INFO -   GET  /health - Health check
+2025-09-06 17:00:45,702 - __main__ - INFO -   POST /analyze - Complete analysis (image + preferences)
+2025-09-06 17:00:45,702 - __main__ - INFO -   POST /analyze-stream - Streaming analysis (image + preferences)
+2025-09-06 17:00:45,702 - __main__ - INFO -   POST /analyze/step1 - Image analysis only
+2025-09-06 17:00:45,702 - __main__ - INFO -   POST /analyze/step2 - Design critique
+2025-09-06 17:00:45,702 - __main__ - INFO -   POST /analyze/step3 - Parse preferences
+2025-09-06 17:00:45,702 - __main__ - INFO -   POST /analyze/step4 - Generate recommendations
+2025-09-06 17:00:45,702 - __main__ - INFO - Server starting on http://localhost:8009
+2025-09-06 17:00:45,731 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8009
+ * Running on http://172.19.178.187:8009
+2025-09-06 17:00:45,731 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-06 17:00:45,732 - werkzeug - INFO -  * Restarting with stat
+2025-09-06 17:00:45,812 - __main__ - INFO - Importing designer modules...
+2025-09-06 17:00:45,834 - __main__ - INFO - Designer modules imported successfully
+2025-09-06 17:00:45,834 - __main__ - INFO - Flask application initialized
+2025-09-06 17:00:45,835 - __main__ - INFO - Configuration set - Upload folder: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T
+2025-09-06 17:00:45,835 - __main__ - INFO - Configuration set - Max file size: 16777216 bytes
+2025-09-06 17:00:45,835 - __main__ - INFO - Configuration set - Allowed extensions: {'gif', 'bmp', 'jpeg', 'png', 'jpg'}
+2025-09-06 17:00:45,835 - __main__ - INFO - Initializing AI components...
+2025-09-06 17:00:45,835 - __main__ - INFO - Loading API keys from .env file...
+2025-09-06 17:00:45,835 - __main__ - INFO - API keys loaded successfully
+2025-09-06 17:00:45,835 - __main__ - INFO - Creating ImageAnalyzer instance...
+2025-09-06 17:00:45,835 - __main__ - INFO - Creating DesignCritic instance...
+2025-09-06 17:00:45,835 - __main__ - INFO - Creating InputParser instance...
+2025-09-06 17:00:45,835 - __main__ - INFO - Creating ProductFinder instance...
+2025-09-06 17:00:45,835 - __main__ - INFO - All AI components initialized successfully
+2025-09-06 17:00:45,836 - __main__ - INFO - Starting Interior Designer API Server...
+2025-09-06 17:00:45,836 - __main__ - INFO - Available endpoints:
+2025-09-06 17:00:45,836 - __main__ - INFO -   GET  /health - Health check
+2025-09-06 17:00:45,836 - __main__ - INFO -   POST /analyze - Complete analysis (image + preferences)
+2025-09-06 17:00:45,836 - __main__ - INFO -   POST /analyze-stream - Streaming analysis (image + preferences)
+2025-09-06 17:00:45,836 - __main__ - INFO -   POST /analyze/step1 - Image analysis only
+2025-09-06 17:00:45,836 - __main__ - INFO -   POST /analyze/step2 - Design critique
+2025-09-06 17:00:45,836 - __main__ - INFO -   POST /analyze/step3 - Parse preferences
+2025-09-06 17:00:45,836 - __main__ - INFO -   POST /analyze/step4 - Generate recommendations
+2025-09-06 17:00:45,836 - __main__ - INFO - Server starting on http://localhost:8009
+2025-09-06 17:00:45,849 - werkzeug - WARNING -  * Debugger is active!
+2025-09-06 17:00:45,860 - werkzeug - INFO -  * Debugger PIN: 961-130-656
+2025-09-06 17:01:18,383 - __main__ - INFO - [req_1757203278] Starting streaming room analysis request
+2025-09-06 17:01:18,387 - __main__ - INFO - [req_1757203278] Image file found: room.jpg
+2025-09-06 17:01:18,387 - __main__ - INFO - [req_1757203278] Preferences received: 99 characters
+2025-09-06 17:01:18,387 - __main__ - INFO - [req_1757203278] Saving file to temporary path: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/room.jpg
+2025-09-06 17:01:18,390 - __main__ - INFO - [req_1757203278] File saved successfully (2822905 bytes)
+2025-09-06 17:01:18,391 - __main__ - INFO - [req_1757203278] Starting Step 1: Image Analysis
+2025-09-06 17:01:18,391 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2025 17:01:18] "POST /analyze-stream HTTP/1.1" 200 -
+2025-09-06 17:01:22,406 - __main__ - INFO - [req_1757203278] Image analysis completed successfully
+2025-09-06 17:01:22,406 - __main__ - INFO - [req_1757203278] Starting Step 2: Design Critique
+2025-09-06 17:01:26,909 - __main__ - INFO - [req_1757203278] Design critique completed successfully
+2025-09-06 17:01:26,910 - __main__ - INFO - [req_1757203278] Starting Step 3: Parse User Preferences
+2025-09-06 17:01:27,827 - __main__ - INFO - [req_1757203278] User preferences parsed successfully
+2025-09-06 17:01:27,827 - __main__ - INFO - [req_1757203278] Starting Step 4: Generate Product Recommendations
+2025-09-06 17:01:56,700 - __main__ - INFO - [req_1757203278] Product recommendations generated successfully
+2025-09-06 17:01:56,701 - __main__ - INFO - [req_1757203278] Found 8 product recommendations
+2025-09-06 17:01:56,701 - __main__ - INFO - [req_1757203278] Streaming analysis completed successfully
+2025-09-06 17:01:56,702 - __main__ - INFO - [req_1757203278] Cleaning up temporary file: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/room.jpg
+2025-09-06 17:23:44,307 - __main__ - INFO - Importing designer modules...
+2025-09-06 17:23:44,343 - __main__ - INFO - Designer modules imported successfully
+2025-09-06 17:23:44,343 - __main__ - INFO - Flask application initialized
+2025-09-06 17:23:44,344 - __main__ - INFO - Configuration set - Upload folder: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T
+2025-09-06 17:23:44,344 - __main__ - INFO - Configuration set - Max file size: 16777216 bytes
+2025-09-06 17:23:44,344 - __main__ - INFO - Configuration set - Allowed extensions: {'bmp', 'jpeg', 'png', 'gif', 'jpg'}
+2025-09-06 17:23:44,344 - __main__ - INFO - Initializing AI components...
+2025-09-06 17:23:44,344 - __main__ - INFO - Loading API keys from .env file...
+2025-09-06 17:23:44,344 - __main__ - INFO - API keys loaded successfully
+2025-09-06 17:23:44,344 - __main__ - INFO - Creating ImageAnalyzer instance...
+2025-09-06 17:23:44,344 - __main__ - INFO - Creating DesignCritic instance...
+2025-09-06 17:23:44,344 - __main__ - INFO - Creating InputParser instance...
+2025-09-06 17:23:44,344 - __main__ - INFO - Creating ProductFinder instance...
+2025-09-06 17:23:44,344 - __main__ - INFO - All AI components initialized successfully
+2025-09-06 17:23:44,345 - __main__ - INFO - Starting Interior Designer API Server...
+2025-09-06 17:23:44,345 - __main__ - INFO - Available endpoints:
+2025-09-06 17:23:44,345 - __main__ - INFO -   GET  /health - Health check
+2025-09-06 17:23:44,345 - __main__ - INFO -   POST /analyze - Complete analysis (image + preferences)
+2025-09-06 17:23:44,345 - __main__ - INFO -   POST /analyze-stream - Streaming analysis (image + preferences)
+2025-09-06 17:23:44,345 - __main__ - INFO -   POST /analyze/step1 - Image analysis only
+2025-09-06 17:23:44,345 - __main__ - INFO -   POST /analyze/step2 - Design critique
+2025-09-06 17:23:44,345 - __main__ - INFO -   POST /analyze/step3 - Parse preferences
+2025-09-06 17:23:44,345 - __main__ - INFO -   POST /analyze/step4 - Generate recommendations
+2025-09-06 17:23:44,345 - __main__ - INFO - Server starting on http://localhost:8009
+2025-09-06 17:23:44,371 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8009
+ * Running on http://172.19.178.187:8009
+2025-09-06 17:23:44,371 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2025-09-06 17:23:44,372 - werkzeug - INFO -  * Restarting with stat
+2025-09-06 17:23:44,452 - __main__ - INFO - Importing designer modules...
+2025-09-06 17:23:44,473 - __main__ - INFO - Designer modules imported successfully
+2025-09-06 17:23:44,474 - __main__ - INFO - Flask application initialized
+2025-09-06 17:23:44,474 - __main__ - INFO - Configuration set - Upload folder: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T
+2025-09-06 17:23:44,474 - __main__ - INFO - Configuration set - Max file size: 16777216 bytes
+2025-09-06 17:23:44,474 - __main__ - INFO - Configuration set - Allowed extensions: {'bmp', 'jpg', 'jpeg', 'gif', 'png'}
+2025-09-06 17:23:44,474 - __main__ - INFO - Initializing AI components...
+2025-09-06 17:23:44,474 - __main__ - INFO - Loading API keys from .env file...
+2025-09-06 17:23:44,474 - __main__ - INFO - API keys loaded successfully
+2025-09-06 17:23:44,475 - __main__ - INFO - Creating ImageAnalyzer instance...
+2025-09-06 17:23:44,475 - __main__ - INFO - Creating DesignCritic instance...
+2025-09-06 17:23:44,475 - __main__ - INFO - Creating InputParser instance...
+2025-09-06 17:23:44,475 - __main__ - INFO - Creating ProductFinder instance...
+2025-09-06 17:23:44,475 - __main__ - INFO - All AI components initialized successfully
+2025-09-06 17:23:44,475 - __main__ - INFO - Starting Interior Designer API Server...
+2025-09-06 17:23:44,475 - __main__ - INFO - Available endpoints:
+2025-09-06 17:23:44,475 - __main__ - INFO -   GET  /health - Health check
+2025-09-06 17:23:44,475 - __main__ - INFO -   POST /analyze - Complete analysis (image + preferences)
+2025-09-06 17:23:44,475 - __main__ - INFO -   POST /analyze-stream - Streaming analysis (image + preferences)
+2025-09-06 17:23:44,475 - __main__ - INFO -   POST /analyze/step1 - Image analysis only
+2025-09-06 17:23:44,475 - __main__ - INFO -   POST /analyze/step2 - Design critique
+2025-09-06 17:23:44,475 - __main__ - INFO -   POST /analyze/step3 - Parse preferences
+2025-09-06 17:23:44,475 - __main__ - INFO -   POST /analyze/step4 - Generate recommendations
+2025-09-06 17:23:44,476 - __main__ - INFO - Server starting on http://localhost:8009
+2025-09-06 17:23:44,488 - werkzeug - WARNING -  * Debugger is active!
+2025-09-06 17:23:44,498 - werkzeug - INFO -  * Debugger PIN: 961-130-656
+2025-09-06 17:24:29,596 - __main__ - INFO - [req_1757204669] Starting streaming room analysis request
+2025-09-06 17:24:29,599 - __main__ - INFO - [req_1757204669] Image file found: demo.png
+2025-09-06 17:24:29,599 - __main__ - INFO - [req_1757204669] Preferences received: 85 characters
+2025-09-06 17:24:29,599 - __main__ - INFO - [req_1757204669] Saving file to temporary path: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/demo.png
+2025-09-06 17:24:29,600 - __main__ - INFO - [req_1757204669] File saved successfully (647128 bytes)
+2025-09-06 17:24:29,601 - __main__ - INFO - [req_1757204669] Starting Step 1: Image Analysis
+2025-09-06 17:24:29,601 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2025 17:24:29] "POST /analyze-stream HTTP/1.1" 200 -
+2025-09-06 17:24:32,796 - __main__ - INFO - [req_1757204669] Image analysis completed successfully
+2025-09-06 17:24:32,796 - __main__ - INFO - [req_1757204669] Starting Step 2: Design Critique
+2025-09-06 17:24:37,710 - __main__ - INFO - [req_1757204669] Design critique completed successfully
+2025-09-06 17:24:37,711 - __main__ - INFO - [req_1757204669] Starting Step 3: Parse User Preferences
+2025-09-06 17:24:38,521 - __main__ - INFO - [req_1757204669] User preferences parsed successfully
+2025-09-06 17:24:38,522 - __main__ - INFO - [req_1757204669] Starting Step 4: Generate Product Recommendations
+2025-09-06 17:25:09,491 - __main__ - INFO - [req_1757204669] Product recommendations generated successfully
+2025-09-06 17:25:09,491 - __main__ - INFO - [req_1757204669] Found 8 product recommendations
+2025-09-06 17:25:09,492 - __main__ - INFO - [req_1757204669] Streaming analysis completed successfully
+2025-09-06 17:25:09,492 - __main__ - INFO - [req_1757204669] Cleaning up temporary file: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/demo.png
+2025-09-06 17:34:58,202 - __main__ - INFO - [req_1757205298] Starting streaming room analysis request
+2025-09-06 17:34:58,208 - __main__ - INFO - [req_1757205298] Image file found: demo.png
+2025-09-06 17:34:58,208 - __main__ - INFO - [req_1757205298] Preferences received: 96 characters
+2025-09-06 17:34:58,208 - __main__ - INFO - [req_1757205298] Saving file to temporary path: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/demo.png
+2025-09-06 17:34:58,211 - __main__ - INFO - [req_1757205298] File saved successfully (647128 bytes)
+2025-09-06 17:34:58,211 - __main__ - INFO - [req_1757205298] Starting Step 1: Image Analysis
+2025-09-06 17:34:58,212 - werkzeug - INFO - 127.0.0.1 - - [06/Sep/2025 17:34:58] "POST /analyze-stream HTTP/1.1" 200 -
+2025-09-06 17:35:01,072 - __main__ - INFO - [req_1757205298] Image analysis completed successfully
+2025-09-06 17:35:01,073 - __main__ - INFO - [req_1757205298] Starting Step 2: Design Critique
+2025-09-06 17:35:06,012 - __main__ - INFO - [req_1757205298] Design critique completed successfully
+2025-09-06 17:35:06,012 - __main__ - INFO - [req_1757205298] Starting Step 3: Parse User Preferences
+2025-09-06 17:35:06,903 - __main__ - INFO - [req_1757205298] User preferences parsed successfully
+2025-09-06 17:35:06,904 - __main__ - INFO - [req_1757205298] Starting Step 4: Generate Product Recommendations
+2025-09-06 17:35:33,848 - __main__ - INFO - [req_1757205298] Product recommendations generated successfully
+2025-09-06 17:35:33,849 - __main__ - INFO - [req_1757205298] Found 7 product recommendations
+2025-09-06 17:35:33,849 - __main__ - INFO - [req_1757205298] Streaming analysis completed successfully
+2025-09-06 17:35:33,850 - __main__ - INFO - [req_1757205298] Cleaning up temporary file: /var/folders/cg/2wdk_2g53yj1p2g67s475zgm0000gn/T/demo.png

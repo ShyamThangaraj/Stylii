@@ -12,11 +12,13 @@ from google import genai
 from elevenlabs.client import ElevenLabs
 import fal_client
 from concurrent.futures import ThreadPoolExecutor, as_completed
+from dotenv import load_dotenv
+load_dotenv()
 
 # --- DO NOT TOUCH (kept exactly as you wrote) ---
-os.environ["FAL_KEY"] = ""
-os.environ["ELEVENLABS_API_KEY"] = ""
-os.environ["GEMINI_API_KEY"] = ""
+# os.environ["FAL_KEY"] = ""
+# os.environ["ELEVENLABS_API_KEY"] = ""
+# os.environ["GEMINI_API_KEY"] = ""
 GOOGLE_KEY = os.environ["GEMINI_API_KEY"]
 ELEVEN_KEY = os.environ["ELEVENLABS_API_KEY"]
 FAL_KEY = os.environ["FAL_KEY"]
@@ -148,9 +150,9 @@ def audio_duration_seconds(path):
 def main(image_path):
     if not os.path.exists(image_path):
         raise FileNotFoundError(f"Image file not found: {image_path}")
-    
+
     print(f"Processing image: {image_path}")
-    
+
     with ThreadPoolExecutor(max_workers=3) as ex:
         fut_video = ex.submit(task_veo2_generate_and_download, image_path)
         fut_audio = ex.submit(task_gemini_and_tts, image_path, ELEVEN_KEY, GOOGLE_KEY)
@@ -195,6 +197,6 @@ if __name__ == "__main__":
         print("Usage: python fallai.py <image_path>")
         print("Example: python fallai.py 'C:/path/to/room/image.jpg'")
         sys.exit(1)
-    
+
     image_path = sys.argv[1]
     main(image_path)

@@ -1,0 +1,15 @@
+[project]
+name = "video-gen"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "flask>=3.0.0",
+    "google-genai>=0.3.0",
+    "elevenlabs>=1.0.0", 
+    "fal-client>=0.4.0",
+    "pillow>=10.0.0",
+    "requests>=2.31.0",
+    "python-dotenv>=1.0.0",
+]
